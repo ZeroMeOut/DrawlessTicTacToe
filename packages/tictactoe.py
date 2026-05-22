@@ -22,6 +22,16 @@ class TicTacToe:
         # |   |  
       # ---------
         # |   |  
+    
+    def display_board_as_list(self) -> list[list[str]]:
+        cell = {(r, c): p for r, c, p in self.fifo_storage}
+
+        board_list = []
+        for i in range(3):
+            row = [cell.get((i, j), ' ') for j in range(3)]
+            board_list.append(row)
+        
+        return board_list
 
     ## FIFO, First in First Out
     def fifo(self, row: int, col: int) -> None:
