@@ -1,6 +1,6 @@
 class TicTacToe:
     def __init__(self):
-        self.board = [[' ' for _ in range(3)] for _ in range(3)]  #[[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
+        self.board = [[' ' for _ in range(3)] for _ in range(3)]  ##[[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
         self.current_player = 'X'
         self.fifo_storage = []
 
@@ -17,6 +17,7 @@ class TicTacToe:
       # ---------
         # |   |  
     
+    ## FIFO, First in First Out
     def fifo(self, row: int, col: int) -> None:
         if len(self.fifo_storage) == 6:
             old_row, old_col = self.fifo_storage.pop(0)
@@ -33,8 +34,8 @@ class TicTacToe:
         else:
             print("Invalid input")
 
-    def check_winner(self) -> str:
 
+    def check_winner(self) -> str:
         winning_combinations = [
             [(0, 0), (0, 1), (0, 2)],  ## Row 1
             [(1, 0), (1, 1), (1, 2)],  ## Row 2
@@ -57,5 +58,10 @@ class TicTacToe:
                 return temp[0]
             
         return ' '  # No winner yet
+    
+    def reset_game(self) -> None:
+        self.board = [[' ' for _ in range(3)] for _ in range(3)]
+        self.current_player = 'X'
+        self.fifo_storage = []
 
     

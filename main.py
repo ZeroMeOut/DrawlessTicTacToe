@@ -9,6 +9,7 @@ def main():
     game.push(2, 1)
     game.push(1, 2)
     game.push(0, 2)
+    game.push(1, 0)
     game.display_board()
     winner = game.check_winner()
     if winner != ' ':
