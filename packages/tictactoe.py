@@ -3,6 +3,10 @@ class TicTacToe:
         self.board = [[' ' for _ in range(3)] for _ in range(3)]  ##[[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
         self.current_player = 'X'
         self.fifo_storage = []
+        self.avalible_moves = [(i, j) for i in range(3) for j in range(3)]
+
+        ## There should be a way to use the fifo_storage plus avalible_moves to draw the game 
+        ## And check for the winning condition
 
     def display_board(self)-> None:
         for i, row in enumerate(self.board):
@@ -22,8 +26,10 @@ class TicTacToe:
         if len(self.fifo_storage) == 6:
             old_row, old_col = self.fifo_storage.pop(0)
             self.board[old_row][old_col] = ' '
+            self.avalible_moves.append((old_row, old_col))
         
         self.fifo_storage.append((row, col))
+        self.avalible_moves.remove((row, col))
 
     
     def push(self, row: int , col: int) -> None:
@@ -33,7 +39,7 @@ class TicTacToe:
             self.current_player = 'O' if self.current_player == 'X' else 'X'
         else:
             print("Invalid input")
-
+        
 
     def check_winner(self) -> str:
         winning_combinations = [

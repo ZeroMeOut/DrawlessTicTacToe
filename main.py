@@ -1,4 +1,4 @@
-from tictactoe import TicTacToe
+from packages.tictactoe import TicTacToe
 
 def main():
     print("Hello from drawlesstictactoe!")
@@ -12,6 +12,7 @@ def main():
     game.push(1, 0)
     game.display_board()
     winner = game.check_winner()
+    print(game.avalible_moves)
     if winner != ' ':
         print(f"The winner is: {winner}")   
 
