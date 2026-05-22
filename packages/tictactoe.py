@@ -1,16 +1,17 @@
 class TicTacToe:
     def __init__(self):
-        self.board = [[' ' for _ in range(3)] for _ in range(3)]  ##[[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
         self.current_player = 'X'
-        self.fifo_storage = []
+        # Each entry is (row, col, player) so we can reconstruct the board without a separate grid
+        self.fifo_storage: list[tuple[int, int, str]] = []
         self.avalible_moves = [(i, j) for i in range(3) for j in range(3)]
 
-        ## There should be a way to use the fifo_storage plus avalible_moves to draw the game 
-        ## And check for the winning condition
+    def display_board(self) -> None:
+        # Reconstruct cell values purely from fifo_storage.
+        # Cells not in fifo_storage are in avalible_moves and therefore empty.
+        cell = {(r, c): p for r, c, p in self.fifo_storage}
 
-    def display_board(self)-> None:
-        for i, row in enumerate(self.board):
-            print(' | '.join(row))
+        for i in range(3):
+            print(' | '.join(cell.get((i, j), ' ') for j in range(3)))
             if i < 2:
                 print('---------')
         print(" ")
@@ -20,26 +21,22 @@ class TicTacToe:
         # |   |  
       # ---------
         # |   |  
-    
+
     ## FIFO, First in First Out
     def fifo(self, row: int, col: int) -> None:
         if len(self.fifo_storage) == 6:
-            old_row, old_col = self.fifo_storage.pop(0)
-            self.board[old_row][old_col] = ' '
+            old_row, old_col, _ = self.fifo_storage.pop(0)
             self.avalible_moves.append((old_row, old_col))
-        
-        self.fifo_storage.append((row, col))
+
+        self.fifo_storage.append((row, col, self.current_player))
         self.avalible_moves.remove((row, col))
 
-    
-    def push(self, row: int , col: int) -> None:
-        if self.board[row][col] == ' ':
-            self.fifo(row, col) ## Makes it so that the game would be drawless, there would always be at least 3 spaces on the board
-            self.board[row][col] = self.current_player
+    def push(self, row: int, col: int) -> None:
+        if (row, col) in self.avalible_moves:
+            self.fifo(row, col)  ## Makes it so that the game would be drawless, there would always be at least 3 spaces on the board
             self.current_player = 'O' if self.current_player == 'X' else 'X'
         else:
             print("Invalid input")
-        
 
     def check_winner(self) -> str:
         winning_combinations = [
@@ -55,19 +52,21 @@ class TicTacToe:
             [(0, 2), (1, 1), (2, 0)]   ## Diagonal 2
         ]
 
+        # Build a lookup from occupied cells — skip available (empty) cells entirely
+        occupied = {(r, c): p for r, c, p in self.fifo_storage}
+
         for combination in winning_combinations:
-            temp = []
-            for row, col in combination:
-                temp.append(self.board[row][col])
-            
-            if len(set(temp)) == 1 and temp[0] != ' ':
-                return temp[0]
-            
+            # Skip any combination that contains an empty cell
+            if any(cell not in occupied for cell in combination):
+                continue
+
+            players = [occupied[cell] for cell in combination]
+            if len(set(players)) == 1:
+                return players[0]
+
         return ' '  # No winner yet
-    
+
     def reset_game(self) -> None:
-        self.board = [[' ' for _ in range(3)] for _ in range(3)]
         self.current_player = 'X'
         self.fifo_storage = []
-
-    
+        self.avalible_moves = [(i, j) for i in range(3) for j in range(3)]
