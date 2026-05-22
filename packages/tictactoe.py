@@ -38,6 +38,14 @@ class TicTacToe:
         else:
             print("Invalid input")
 
+    def revert(self) -> None:
+        if self.fifo_storage:
+            last_row, last_col, _ = self.fifo_storage.pop()
+            self.avalible_moves.append((last_row, last_col))
+            self.current_player = 'O' if self.current_player == 'X' else 'X'
+        else:
+            print("No moves to revert")
+
     def check_winner(self) -> str:
         winning_combinations = [
             [(0, 0), (0, 1), (0, 2)],  ## Row 1
