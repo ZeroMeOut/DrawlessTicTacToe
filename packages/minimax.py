@@ -23,15 +23,16 @@ def minimax(game: TicTacToe, depth: int, is_maximizing: bool) -> tuple[tuple[int
         row, col = move
         game.push(row, col)
 
-        score = minimax(game, depth - 1, not is_maximizing)
+        _, score = minimax(game, depth - 1, not is_maximizing)
 
         game.revert()
 
         if is_maximizing:
-            if score[1] > best[1]:
-                best = score
-        else:
-            if score[1] < best[1]:
-                best = score
+            if score > best[1]:
+                best = (move, score)
+        # else:
+        #     if score < best[1]:
+        #         best = (move, score)
+        #         print("hit")
     return best
     

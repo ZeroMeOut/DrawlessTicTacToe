@@ -5,10 +5,8 @@ def main():
     print("Hello from drawlesstictactoe!")
     game = TicTacToe()
     game.push(0, 0)
-    game.push(2, 0)
-    game.push(1, 1)
-    game.display_board() 
-    game.revert()
+    game.push(2, 0) 
+    print("score: ", minimax(game, 10, True))
     game.display_board()
 
 if __name__ == "__main__":

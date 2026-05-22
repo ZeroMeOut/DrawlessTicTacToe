@@ -4,6 +4,7 @@ class TicTacToe:
         # Each entry is (row, col, player) so we can reconstruct the board without a separate grid
         self.fifo_storage: list[tuple[int, int, str]] = []
         self.avalible_moves = [(i, j) for i in range(3) for j in range(3)]
+        self._evicted: list[tuple[int, int, str] | None] = []
 
     def display_board(self) -> None:
         # Reconstruct cell values purely from fifo_storage.
@@ -25,8 +26,11 @@ class TicTacToe:
     ## FIFO, First in First Out
     def fifo(self, row: int, col: int) -> None:
         if len(self.fifo_storage) == 6:
-            old_row, old_col, _ = self.fifo_storage.pop(0)
-            self.avalible_moves.append((old_row, old_col))
+            evicted = self.fifo_storage.pop(0)
+            self.avalible_moves.append((evicted[0], evicted[1]))
+            self._evicted.append(evicted) 
+        else:
+            self._evicted.append(None) 
 
         self.fifo_storage.append((row, col, self.current_player))
         self.avalible_moves.remove((row, col))
@@ -39,12 +43,21 @@ class TicTacToe:
             print("Invalid input")
 
     def revert(self) -> None:
-        if self.fifo_storage:
-            last_row, last_col, _ = self.fifo_storage.pop()
-            self.avalible_moves.append((last_row, last_col))
-            self.current_player = 'O' if self.current_player == 'X' else 'X'
-        else:
-            print("No moves to revert")
+        if not self.fifo_storage:
+                    print("No moves to revert")
+                    return
+ 
+        # Undo the last push: the cell goes back to available
+        last_row, last_col, _ = self.fifo_storage.pop()
+        self.avalible_moves.append((last_row, last_col))
+        self.current_player = 'O' if self.current_player == 'X' else 'X'
+ 
+        # If that push evicted an entry, restore it at the front and remove it from available
+        evicted = self._evicted.pop()
+        if evicted is not None:
+            self.fifo_storage.insert(0, evicted)
+            self.avalible_moves.remove((evicted[0], evicted[1]))
+
 
     def check_winner(self) -> str:
         winning_combinations = [
