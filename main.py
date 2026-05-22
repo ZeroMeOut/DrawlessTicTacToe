@@ -6,7 +6,7 @@ def main():
     game = TicTacToe()
     game.push(0, 0)
     game.push(2, 0) 
-    print("score: ", minimax(game, 10, True))
+    print("Move and score: ", minimax(game, 10, True, float('-inf'), float('inf')))
     game.display_board()
 
 if __name__ == "__main__":
