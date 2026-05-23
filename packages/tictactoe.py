@@ -5,6 +5,7 @@ class TicTacToe:
         self.fifo_storage: list[tuple[int, int, str]] = []
         self.avalible_moves = [(i, j) for i in range(3) for j in range(3)]
         self._evicted: list[tuple[int, int, str] | None] = []
+        self.history: list[dict] = []  
 
     def display_board(self) -> None:
         # Reconstruct cell values purely from fifo_storage.
@@ -45,10 +46,24 @@ class TicTacToe:
         self.fifo_storage.append((row, col, self.current_player))
         self.avalible_moves.remove((row, col))
 
+    def add_to_history(self) -> None:
+        board_state = self.display_board_as_list()
+        
+        if len(self.history) >= 10:
+            self.history.pop(0)
+        
+        self.history.append({
+            'current_player': self.current_player,
+            'board': board_state,
+            'avalible_moves': self.avalible_moves.copy(),
+            'next_move_to_be_removed': self._evicted[-1] if self._evicted else None,
+        })
+
     def push(self, row: int, col: int) -> None:
         if (row, col) in self.avalible_moves:
             self.fifo(row, col)  ## Makes it so that the game would be drawless, there would always be at least 3 spaces on the board
             self.current_player = 'O' if self.current_player == 'X' else 'X'
+            self.add_to_history()
         else:
             print("Invalid input")
 
@@ -67,7 +82,6 @@ class TicTacToe:
         if evicted is not None:
             self.fifo_storage.insert(0, evicted)
             self.avalible_moves.remove((evicted[0], evicted[1]))
-
 
     def check_winner(self) -> str:
         winning_combinations = [
