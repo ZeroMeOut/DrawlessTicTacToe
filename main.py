@@ -1,17 +1,40 @@
 from packages.tictactoe import TicTacToe
 from packages.minimax import minimax
+from packages.llm_survivor import LLMSurvivor
 
 def main():
     print("Hello from drawlesstictactoe!")
     game = TicTacToe()
-    game.push(0, 0)
-    game.push(2, 0) 
-    game.push(1, 1)
-    game.push(2, 1)
-    game.push(1, 2)
-    game.display_board()
-    print(game.display_board_as_list())
-    print(game.history)
+    
+    survivor = LLMSurvivor(model_name='gemma3n:e2b')
+
+    while True:
+        if game.current_player == 'X':
+            row, col = minimax(game=game, depth=10, is_maximizing=True, alpha=float('-inf'), beta=float('inf'))[0]
+            game.push(row, col)
+            print(f"Minimax placed X at row {row} and column {col}.")
+            game.display_board()
+
+            if game.check_winner() != ' ':
+                print(f"{game.check_winner()} wins!")
+                break
+        else:
+            was_valid = True
+            while True:
+                move = survivor.make_move(game_history=game.history, was_valid=was_valid)
+                was_valid = game.push(move.row, move.col)
+
+                if was_valid is False:
+                    print(f"LLM placed O at row {move.row} and column {move.col}.")
+
+                if was_valid:
+                    print(f"LLM placed O at row {move.row} and column {move.col}.")
+                    game.display_board()
+                    break
+
+            if game.check_winner() != ' ':
+                print(f"{game.check_winner()} wins!")
+                break
 
 if __name__ == "__main__":
     main()

@@ -59,13 +59,15 @@ class TicTacToe:
             'next_move_to_be_removed': self._evicted[-1] if self._evicted else None,
         })
 
-    def push(self, row: int, col: int) -> None:
+    def push(self, row: int, col: int) -> bool:
         if (row, col) in self.avalible_moves:
-            self.fifo(row, col)  ## Makes it so that the game would be drawless, there would always be at least 3 spaces on the board
+            self.fifo(row, col)
             self.current_player = 'O' if self.current_player == 'X' else 'X'
             self.add_to_history()
+            return True
         else:
             print("Invalid input")
+            return False
 
     def revert(self) -> None:
         if not self.fifo_storage:
