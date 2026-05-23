@@ -1,5 +1,6 @@
 from packages.tictactoe import TicTacToe
 from packages.minimax import minimax
+from packages.minimax_no_prune import minimax as minimax_no_prune
 from packages.llm_survivor import LLMSurvivor
 
 def main():
@@ -10,7 +11,8 @@ def main():
 
     while True:
         if game.current_player == 'X':
-            row, col = minimax(game=game, depth=10, is_maximizing=True, alpha=float('-inf'), beta=float('inf'))[0]
+            # row, col = minimax(game=game, depth=10, is_maximizing=True, alpha=float('-inf'), beta=float('inf'))[0]
+            row, col = minimax_no_prune(game=game, depth=3, is_maximizing=True)[0]
             game.push(row, col)
             print(f"Minimax placed X at row {row} and column {col}.")
             game.display_board()
