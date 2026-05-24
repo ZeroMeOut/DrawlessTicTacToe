@@ -1,10 +1,12 @@
 from packages.tictactoe import TicTacToe
 
-def evaluate(game: TicTacToe, depth: int) -> float:
+def evaluate(game: TicTacToe, depth: int, player: str) -> float:
+    other_player = 'O' if player == 'X' else 'X'
     winner = game.check_winner()
-    if winner == 'X':
+
+    if winner == player:
         return 100 + depth
-    elif winner == 'O':
+    elif winner == other_player:
         return -100 - depth
     
     ## Since it's drawless, we need to estimate who is winning based on 2-in-a-rows
@@ -21,26 +23,20 @@ def evaluate(game: TicTacToe, depth: int) -> float:
         players = [occupied[cell] for cell in combo if cell in occupied]
         ## If a combo contains 2 pieces of the same player and 0 of the other, it's a threat
         if len(players) == 2 and len(set(players)) == 1:
-            if players[0] == 'X':
+            if players[0] == player:
                 score += 10 
             else:
                 score -= 10
 
     return score
 
-def minimax_alpha_beta(
-    game: TicTacToe,
-    depth: int,
-    is_maximizing: bool,
-    alpha: float,
-    beta: float
-) -> tuple[tuple[int, int] | None, float]:
+def minimax_alpha_beta(game: TicTacToe, depth: int = 6, is_maximizing: bool = True, 
+                       alpha: float = float('-inf'), beta: float = float('inf'), player: str = 'X') -> tuple[tuple[int, int] | None, float]:
 
     if game.check_winner() != ' ' or depth == 0:
-        return (None, evaluate(game, depth))
+        return (None, evaluate(game, depth, player))
 
     best_move = None
-    
     moves_to_try = list(game.avalible_moves)
 
     if is_maximizing:
