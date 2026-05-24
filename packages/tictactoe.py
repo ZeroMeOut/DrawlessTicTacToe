@@ -66,7 +66,7 @@ class TicTacToe:
             self.add_to_history()
             return True
         else:
-            print("Invalid input")
+            # print("Invalid input")
             return False
 
     def revert(self) -> None:
