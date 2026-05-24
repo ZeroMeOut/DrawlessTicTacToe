@@ -11,6 +11,7 @@ def main():
 
     for i in range(3):
         print(f"Game {i + 1}")
+        game.reset_game()
         while True:
             if game.current_player == 'X':
                 row, col = minimax_alpha_beta(game=game, depth=10, is_maximizing=True, alpha=float('-inf'), beta=float('inf'))[0]
