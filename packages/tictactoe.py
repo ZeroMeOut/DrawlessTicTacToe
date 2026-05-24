@@ -73,6 +73,9 @@ class TicTacToe:
         if not self.fifo_storage:
                     print("No moves to revert")
                     return
+
+        if self.history:
+            self.history.pop()
  
         # Undo the last push: the cell goes back to available
         last_row, last_col, _ = self.fifo_storage.pop()
