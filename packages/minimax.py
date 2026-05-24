@@ -1,44 +1,36 @@
 from  packages.tictactoe import TicTacToe
 
-def evaluate(game: TicTacToe) -> float:
+def evaluate(game: TicTacToe, depth: int) -> float:
     winner = game.check_winner()
     if winner == 'X':
-        return 1
+        return 10 + depth
     elif winner == 'O':
-        return -1
+        return -10 - depth
     else:
         return 0
 
-def minimax(game: TicTacToe, depth: int, is_maximizing: bool, alpha: float, beta: float) -> tuple[tuple[int, int], float]:
-    if depth == 0 or game.check_winner() != ' ':
-        return ((0, 0), evaluate(game))
-
+def minimax(game: TicTacToe, depth: int, is_maximizing: bool) -> tuple[tuple[int, int], float]:
+     
     if is_maximizing:
-        maxEval = float('-inf')
-        for move in game.avalible_moves:
-            row, col = move
-            game.push(row, col)
-
-            _, score = minimax(game, depth - 1, not is_maximizing, alpha, beta)
-
-            game.revert()
-            maxEval = max(score, maxEval)
-            alpha = max(alpha, score)
-            if beta <= alpha:
-                break
-        return (move, maxEval)
-            
+        best = ((0, 0),float('-inf'))
     else:
-        minEval = float('inf')
-        for move in game.avalible_moves:
-            row, col = move
-            game.push(row, col)
+        best = ((0, 0),float('inf'))
+    
+    if depth == 0 or game.check_winner() != ' ':
+        return ((0, 0), evaluate(game, depth))
 
-            _, score = minimax(game, depth - 1, not is_maximizing, alpha, beta)
+    for move in game.avalible_moves:
+        row, col = move
+        game.push(row, col)
 
-            game.revert()
-            minEval = min(score, minEval)
-            beta = min(beta, score)
-            if beta <= alpha:
-                break
-        return (move, minEval)
+        _, score = minimax(game, depth - 1, not is_maximizing)
+
+        game.revert()
+
+        if is_maximizing:
+            if score > best[1]:
+                best = (move, score)
+        else:
+            if score < best[1]:
+                best = (move, score)
+    return best
