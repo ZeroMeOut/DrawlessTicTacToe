@@ -1,4 +1,5 @@
 import os
+import json
 import random
 from google import genai
 from google.genai import types
@@ -66,9 +67,16 @@ class OnlineLLMPlayer:
         if len(self.history) > 50:
             self.history.pop(0)
 
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(current_dir, 'game_logs.json')
+        
+        with open(json_path, 'r') as f:
+            examples = json.load(f)
+
         prompt = (
             'You are to play a move in a game of tic-tac-toe as O. '
             'The board is represented as a 3x3 grid, with rows and columns '
+            f'example games: {examples} '
             f'indexed from 0 to 2. Here is some info: {self.history}'
         )
 

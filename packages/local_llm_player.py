@@ -1,3 +1,5 @@
+import os
+import json
 import random
 from pydantic import BaseModel
 from ollama import chat, ChatResponse
@@ -61,6 +63,13 @@ class LocalLLMPlayer:
         self.history.append(info)
         if len(self.history) > 50:
             self.history.pop(0)
+
+        
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(current_dir, 'game_logs.json')
+        
+        with open(json_path, 'r') as f:
+            examples = json.load(f)
 
         response: ChatResponse = chat(
             model=self.model_name,
