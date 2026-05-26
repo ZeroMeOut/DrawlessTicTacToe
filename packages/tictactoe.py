@@ -120,3 +120,5 @@ class TicTacToe:
         self.current_player = 'X'
         self.fifo_storage = []
         self.avalible_moves = [(i, j) for i in range(3) for j in range(3)]
+        self._evicted = []
+        self.history = []
