@@ -8,5 +8,4 @@ dependencies = [
     "dotenv>=0.9.9",
     "google-genai>=2.6.0",
     "ollama>=0.6.2",
-    "pygame-ce>=2.5.7",
 ]
