@@ -27,7 +27,7 @@ A little demo of the llm beating the minimax algo I made.
 https://github.com/user-attachments/assets/e2817977-6310-46e7-ac3b-1110ecc6bec2
 
 ## Thoughts
-Initially I wanted to write this is rust while revision rust, but I figured it would be easier to make a prototype in python. The game is your typical tictactoe, but if there two spaces left it removes the oldest added move (hence FIFO). The `tictactoe.py` controls most of the logic, with variables that can store states and other important functions like resetting, reverting, and checking winning conditions. 
+Initially I wanted to write this is rust while revising rust, but I figured it would be easier to make a prototype in python. The game is your typical tictactoe, but if there two spaces left it removes the oldest added move (hence FIFO). The `tictactoe.py` controls most of the logic, with variables that can store states and other important functions like resetting, reverting, and checking winning conditions. 
 
 The `minimax.py` was initally nothing out of the ordinary, but I soon realised that it was making very werid and questionable moves because of the FIFO nature of the game. After some tweaks like making it consider certain threats and fixing bug in the revert function in my `tictactoe.py` it was finally in a state that I liked.
 
