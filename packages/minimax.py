@@ -1,6 +1,4 @@
-from packages.tictactoe import TicTacToe
-## Idk why I need to do package. here when it is in the same folder
-## My main isnt working without it which is annoying
+from .tictactoe import TicTacToe
 
 def evaluate(game: TicTacToe, depth: int, active_player: str) -> float:
     other_player = 'O' if active_player == 'X' else 'X'
